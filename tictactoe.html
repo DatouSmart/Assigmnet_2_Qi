@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title>tic-tac-toe</title>
+		<style>
+			*{margin:0;padding:0;}
+			html,body{width:100%;height:100%;overflow:hidden;}
+			.main{width:100%;height:100%;background-color:#000;position:relative;}
+			.board{width:604px;height:604px;position:absolute;top:calc(50% - 302px);left:calc(50% - 302px);background-color:#fff;display:table;}
+			.row{display:table-row;}
+			.grid{display:table-cell;width:200px;height:200px;border-right:2px solid #000;border-bottom:2px solid #000;background-color:#222;position:relative;}
+			.grid.blank{cursor:pointer;}
+			.grid.o::after{content:'◯';position:absolute;font-size:140px;top:0;left:20px;color:aqua;}
+			.grid.x::after{content:'✕';position:absolute;font-size:160px;top:-20px;left:34px;color:blueviolet;}
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<div class="board">
+				<div class="row">
+					<div class="grid" data-row="1" data-col="1"></div>
+					<div class="grid" data-row="1" data-col="2"></div>
+					<div class="grid" data-row="1" data-col="3"></div>
+				</div>
+				<div class="row">
+					<div class="grid" data-row="2" data-col="1"></div>
+					<div class="grid" data-row="2" data-col="2"></div>
+					<div class="grid" data-row="2" data-col="3"></div>
+				</div>
+				<div class="row">
+					<div class="grid" data-row="3" data-col="1"></div>
+					<div class="grid" data-row="3" data-col="2"></div>
+					<div class="grid" data-row="3" data-col="3"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+		let turn = '';
+		$(document).ready(function() {
+			newGame();
+			$('.grid.blank').on('click', function() {
+				checkWin($(this));
+			});
+		});
+
+		function newGame() {
+			$('.grid').removeClass('o').removeClass('x').addClass('blank');
+			turn = 'o';
+		}
+
+		function checkWin($grid) {
+			const row = $grid.data('row');
+			const col = $grid.data('col');
+
+			$grid.removeClass('blank').addClass(turn);
+
+			let isWin = false;
+			// Traversing across the row
+			if ($('.grid[data-row=' + row + '][data-col=1]').hasClass(turn) 
+				&& $('.grid[data-row=' + row + '][data-col=2]').hasClass(turn) 
+				&& $('.grid[data-row=' + row + '][data-col=3]').hasClass(turn)) {
+				isWin = true;
+			}
+			// Traversing across the column
+			else if ($('.grid[data-row=1][data-col=' + col + ']').hasClass(turn) 
+				&& $('.grid[data-row=2][data-col=' + col + ']').hasClass(turn) 
+				&& $('.grid[data-row=3][data-col=' + col + ']').hasClass(turn)) {
+				isWin = true;
+			}
+			// Traversing for [1,1] to [3,3]
+			else if ($('.grid[data-row=1][data-col=1]').hasClass(turn) 
+				&& $('.grid[data-row=2][data-col=2]').hasClass(turn) 
+				&& $('.grid[data-row=3][data-col=3]').hasClass(turn)) {
+				isWin = true;
+			}
+			// Traversing for [1,3] to [3,1]
+			else if ($('.grid[data-row=1][data-col=3]').hasClass(turn) 
+				&& $('.grid[data-row=2][data-col=2]').hasClass(turn) 
+				&& $('.grid[data-row=3][data-col=1]').hasClass(turn)) {
+				isWin = true;
+			}
+
+			if (isWin) {
+				window.setTimeout(gameOver, 200);
+			} else {
+				if ($('.grid.blank').length == 0) {
+					window.setTimeout(drawGame, 200);
+				} else {
+					turn = (turn == 'o') ? 'x' : 'o';
+				}
+			}
+		}
+
+		function gameOver() {
+			alert(turn.toUpperCase() + ' Win!');
+			newGame();
+		}
+
+		function drawGame() {
+			alert('Draw Game!');
+			newGame();
+		}
+	</script>
+</html>
